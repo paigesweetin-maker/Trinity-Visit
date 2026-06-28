@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your San Jose Visit: What sounds fun?</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #0f0f14; color: #e8e4f0;
+    min-height: 100vh; padding: 2rem 1rem 4rem;
+  }
+  .page { max-width: 680px; margin: 0 auto; }
+  header { margin-bottom: 2.5rem; }
+  .eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #9d7fe3; margin-bottom: 0.6rem; }
+  h1 { font-size: clamp(1.6rem, 5vw, 2.4rem); font-weight: 700; line-height: 1.15; color: #f0eaff; margin-bottom: 1rem; }
+  .intro { font-size: 15px; line-height: 1.7; color: #a099b8; border-left: 2px solid #3d2f6b; padding-left: 1rem; }
+  .intro strong { color: #c8bff0; font-weight: 500; }
+  .legend { display: flex; gap: 1.25rem; flex-wrap: wrap; margin: 1.75rem 0 2rem; }
+  .legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 13px; color: #a099b8; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .dot-yes { background: #4ade80; }
+  .dot-maybe { background: #f59e0b; }
+  .dot-no { background: #f87171; }
+  .category { margin-bottom: 2rem; }
+  .category-label { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #6b5fa0; margin-bottom: 0.5rem; padding-bottom: 0.4rem; border-bottom: 1px solid #1e1a2e; }
+  .activity { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.7rem 0; border-bottom: 1px solid #1a1726; }
+  .activity:last-child { border-bottom: none; }
+  .act-text { flex: 1; min-width: 0; }
+  .act-name { font-size: 14px; font-weight: 500; color: #ddd6f3; margin-bottom: 2px; line-height: 1.3; }
+  .act-name a { color: #c4b5fd; text-decoration: underline; text-underline-offset: 2px; text-decoration-color: #5b4a8a; }
+  .act-name a:hover { color: #e9d5ff; text-decoration-color: #9d7fe3; }
+  .act-note { font-size: 11px; color: #6b5fa0; line-height: 1.6; }
+  .act-tag { display: inline-block; font-size: 9px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 1px 6px; border-radius: 4px; margin-left: 0.4rem; vertical-align: middle; position: relative; top: -1px; }
+  .tag-confirmed { background: #1e3a2f; color: #4ade80; }
+  .vibe-btns { display: flex; gap: 0.3rem; flex-shrink: 0; padding-top: 1px; }
+  .vibe-btn { border: 1.5px solid #2e2848; border-radius: 20px; background: none; cursor: pointer; font-size: 11px; font-weight: 600; padding: 4px 10px; color: #6b5fa0; white-space: nowrap; transition: all 0.15s; font-family: inherit; }
+  .vibe-btn:hover { border-color: #4a3d7a; color: #a099b8; }
+  .vibe-btn.yes.active  { background: #14532d; border-color: #4ade80; color: #4ade80; }
+  .vibe-btn.maybe.active { background: #451a03; border-color: #f59e0b; color: #f59e0b; }
+  .vibe-btn.no.active   { background: #450a0a; border-color: #f87171; color: #f87171; }
+  .submit-section { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid #1e1a2e; }
+  .submit-note { font-size: 13px; color: #6b5fa0; margin-bottom: 1rem; }
+  .summary-box { background: #17132a; border: 1px solid #2e2848; border-radius: 10px; padding: 1rem 1.25rem; margin-bottom: 1.25rem; display: none; font-size: 13px; line-height: 1.8; }
+  .summary-box.visible { display: block; }
+  .summary-group { margin-bottom: 0.5rem; }
+  .summary-group:last-child { margin-bottom: 0; }
+  .summary-label { font-weight: 600; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; margin-right: 0.4rem; }
+  .label-yes { color: #4ade80; }
+  .label-maybe { color: #f59e0b; }
+  .label-no { color: #f87171; }
+  .summary-items { color: #a099b8; }
+  .copy-btn { background: #9d7fe3; color: #0f0f14; border: none; border-radius: 8px; padding: 0.65rem 1.5rem; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; transition: background 0.15s; opacity: 0.4; pointer-events: none; }
+  .copy-btn.ready { opacity: 1; pointer-events: auto; }
+  .copy-btn:hover { background: #b49af0; }
+  .copy-btn.copied { background: #4ade80; color: #0f0f14; }
+  .copy-hint { font-size: 12px; color: #4a3d7a; margin-top: 0.6rem; }
+  @media (max-width: 480px) {
+    .vibe-btn { padding: 4px 7px; font-size: 10px; }
+    .act-name { font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <div class="eyebrow">San Jose · July 8–15</div>
+    <h1>Your visit! What sounds fun?</h1>
+    <p class="intro">Paige put together a list of things to do during your week. Give each one a vibe check. <strong>Tap the underlined titles to learn more.</strong> You don't have to rate everything — just weigh in on whatever catches your eye (or doesn't).</p>
+  </header>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot dot-yes"></div> Yes, let's do it</div>
+    <div class="legend-item"><div class="legend-dot dot-maybe"></div> Mildly interested</div>
+    <div class="legend-item"><div class="legend-dot dot-no"></div> Don't make me do this</div>
+  </div>
+
+  <div class="category">
+    <div class="category-label">Supernatural</div>
+    <div class="activity">
+      <div class="act-text">
+        <div class="act-name"><a href="https://winchestermysteryhouse.com/mind-magic-with-spencer-grey/" target="_blank">Mind & Magic with Spencer Grey</a></div>
+        <div class="act-note">Winchester Mystery House · July 11 or 18 · mentalism show + after-dark flashlight tour</div>
+      </div>
+      <div class="vibe-btns">
+        <button type="button" class="vibe-btn yes" data-id="mind-magic" data-vibe="yes">Yes</button>
+        <button type="button" class="vibe-btn maybe" data-id="mind-magic" data-vibe="maybe">Maybe</button>
+        <button type="button" class="vibe-btn no" data-id="mind-magic" data-vibe="no">Nope</button>
+      </div>
+    </div>
+    <div class="activity">
+      <div class="act-text">
+        <div class="act-name"><a href="https://www.sfghosthunt.com/" target="_blank">SF Ghost Hunt walking tour</a></div>
+        <div class="act-note">Pacific Heights, San Francisco · Wed–Sun 8pm · magician-actor guide</div>
+      </div>
+      <div class="vibe-btns">
+        <button type="button" class="vibe-btn yes" data-id="ghost-hunt" data-vibe="yes">Yes</button>
+        <button type="button" class="vibe-btn maybe" data-id="ghost-hunt" data-vibe="maybe">Maybe</button>
+        <button type="button" class="vibe-btn no" data-id="ghost-hunt" data-vibe="no">Nope</button>
+      </div>
+    </div>
+    <div class="activity">
+      <div class="act-text">
+        <div class="act-name"><a href="https://alcatrazcitycruises.com/tickets/alcatraz-night-tour" target="_blank">Alcatraz Night Tour</a></div>
+        <div class="act-note">San Francisco · ferry from Pier 33 · cellhouse audio tour, historian talks</div>
+      </div>
+      <div class="vibe-btns">
+        <button type="button" class="vibe-btn yes" data-id="alcatraz" data-vibe="yes">Yes</button>
+        <button type="button" class="vibe-btn maybe" data-id="alcatraz" data-vibe="maybe">Maybe</button>
+        <button type="button" class="vibe-btn no" data-id="alcatraz" data-vibe="no">Nope</button>
+      </div>
+    </div>
+    <div class="activity">
+      <div class="act-text">
+        <div class="act-name"><a href="https://rosicrucian.org/museum" target="_blank">Rosicrucian Egyptian Museum</a></div>
+        <div class="act-note">San Jose · stone tomb, ancient artifacts · largest Egyptian collection in Western US</div>
+      </div>
+      <div class="vibe-btns">
+        <button type="button" class="vibe-btn yes" data-id="rosicrucian" data-vibe="yes">Yes</button>
+        <button type="button" class="vibe-btn maybe" data-id="rosicrucian" data-vibe="maybe">Maybe</button>
+        <button type="button" class="vibe-btn no" data-id="rosicrucian" data-vibe="no">Nope</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="category">
+    <div class="category-label">Shopping</div>
+    <div class="activity">
+      <div class="act-text">
+        <div class="act-name">Haight-Ashbury</div>
+        <div class="act-note">San Francisco · punk/goth/vintage shops, Amoeba Music</div>
+      </div>
+      <div class="vibe-btns">
+        <button type="button" class="vibe-btn yes" data-id="haight" data-vibe="yes">Yes</button>
+        <button type="button" class="vibe-btn maybe" data-id="haight" data-vibe="maybe">Maybe</button>
+        <button type="button" class="vibe-btn no" data-id="haight" data-vibe="no">Nope</button>
+      </div>
+    </div>
+    <div class="activity">
+      <div class="act-text">
+        <div class="act-name">Japantown SF</div>
+        <div class="act-note">San Francisco · KPop albums, photocards, merch, collectibles</div>
+      </div>
+      <div class="vibe-btns">
+        <button type="button" class="vibe-btn yes" data-id="japantown" data-vibe="yes">Yes</button>
+        <button type="button" class="vibe-btn maybe" data-id="japantown" data-vibe="maybe">Maybe</button>
+        <button type="button" class="vibe-btn no" data-id="japantown" data-vibe="no">Nope</button>
+      </div>
+    </div>
+    <div class="activity">
+      <div class="act-text">
+        <div class="act-name"><a href="https://www.borderlands-books.com/" target="_blank">Borderlands Books</a></div>
+        <div class="act-note">SF Haight · horror, sci-fi & mystery specialist · new, used, and rare editions</div>
+      </div>
+      <div class="vibe-btns">
+        <button type="button" class="vibe-btn yes" data-id="borderlands" data-vibe="yes">Yes</button>
+        <button type="button" class="vibe-btn maybe" data-id="borderlands" data-vibe="maybe">Maybe</button>
+        <button type="button" class="vibe-btn no" data-id="borderlands" data-vibe="no">Nope</button>
+      </div>
+    </div>
+    <div class="activity">
+      <div class="act-text">
+        <div class="act-name"><a href="https://citylights.com/" target="_blank">City Lights Booksellers</a></div>
+        <div class="act-note">SF North Beach · legendary Beat Generation bookstore · poetry room upstairs</div>
+      </div>
+      <div class="vibe-btns">
+        <button type="button" class="vibe-btn yes" data-id="city-lights" data-vibe="yes">Yes</button>
+        <button type="button" class="vibe-btn maybe" data-id="city-lights" data-vibe="maybe">Maybe</button>
+        <button type="button" class="vibe-btn no" data-id="city-lights" data-vibe="no">Nope</button>
+      </div>
+    </div>
+    <div class="activity">
+      <div class="act-text">
+        <div class="act-name"><a href="https://www.greenapplebooks.com/" target="_blank">Green Apple Books</a></div>
+        <div class="act-note">SF Clement St · new and used, handwritten staff picks, maze-like shelves</div>
+      </div>
+      <div class="vibe-btns">
+        <button type="button" class="vibe-btn yes" data-id="green-apple" data-vibe="yes">Yes</button>
+        <button type="button" class="vibe-btn maybe" data-id="green-apple" data-vibe="maybe">Maybe</button>
+        <button type="button" class="vibe-btn no" data-id="green-apple" data-vibe="no">Nope</button>
+      </div>
+    </div>
+    <div class="activity">
+      <div class="act-text">
+        <div class="act-name"><a href="https://www.hicklebees.com/" target="_blank">Hicklebee's Books</a></div>
+        <div class="act-note">San Jose · award-winning indie, nationally known for teen selections</div>
+      </div>
+      <div class="vibe-btns">
+        <button type="button" class="vibe-btn yes" data-id="hicklebees" data-vibe="yes">Yes</button>
+        <button type="button" class="vibe-btn maybe" data-id="hicklebees" data-vibe="maybe">Maybe</button>
+        <button type="button" class="vibe-btn no" data-id="hicklebees" data-vibe="no">Nope</button>
+      </div>
+    </div>
+    <div class="activity">
+      <div class="act-text">
+        <div class="act-name"><a href="https://www.recyclebookstore.com/" target="_blank">Recycle Bookstore</a></div>
+        <div class="act-note">San Jose / Campbell · sell and trade used books, affordable finds</div>
+      </div>
+      <div class="vibe-btns">
+        <button type="button" class="vibe-btn yes" data-id="recycle-books" data-vibe="yes">Yes</button>
+        <button type="button" class="vibe-btn maybe" data-id="recycle-books" data-vibe="maybe">Maybe</button>
+        <button type="button" class="vibe-btn no" data-id="recycle-books" data-vibe="no">Nope</button>
+      </div>
+    </div>
+    <div class="activity">
+      <div class="act-text">
+        <div class="act-name"><a href="https://www.britexfabrics.com/" target="_blank">Britex Fabrics</a></div>
+        <div class="act-note">San Francisco · legendary multi-floor fabric store</div>
+      </div>
+      <div class="vibe-btns">
+        <button type="button" class="vibe-btn yes" data-id="britex" data-vibe="yes">Yes</button>
+        <button type="button" class="vibe-btn maybe" data-id="britex" data-vibe="maybe">Maybe</button>
+        <button type="button" class="vibe-btn no" data-id="britex" data-vibe="no">Nope</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="category">
+    <div class="category-label">Art & Museums</div>
+    <div class="activity">
+      <div class="act-text">
+        <div class="act-name"><a href="https://www.famsf.org/deyoung" target="_blank">de Young Museum</a></div>
+        <div class="act-note">San Francisco · American art + strong textiles collection · free Saturdays for Bay Area residents</div>
+      </div>
+      <div class="vibe-btns">
+        <button type="button" class="vibe-btn yes" data-id="deyoung" data-vibe="yes">Yes</button>
+        <button type="button" class="vibe-btn maybe" data-id="deyoung" data-vibe="maybe">Maybe</button>
+        <button type="button" class="vibe-btn no" data-id="deyoung" data-vibe="no">Nope</button>
+      </div>
+    </div>
+    <div class="activity">
+      <div class="act-text">
+        <div class="act-name"><a href="https://www.asianart.org/" target="_blank">Asian Art Museum</a></div>
+        <div class="act-note">San Francisco · 18,000 works spanning 6,000 years</div>
+      </div>
+      <div class="vibe-btns">
+        <button type="button" class="vibe-btn yes" data-id="asian-art" data-vibe="yes">Yes</button>
+        <button type="button" class="vibe-btn maybe" data-id="asian-art" data-vibe="maybe">Maybe</button>
+        <button type="button" class="vibe-btn no" data-id="asian-art" data-vibe="no">Nope</button>
+      </div>
+    </div>
+    <div class="activity">
+      <div class="act-text">
+        <div class="act-name"><a href="https://www.sfmoma.org/" target="_blank">SFMOMA</a></div>
+        <div class="act-note">San Francisco · free for under-18 on Family Days</div>
+      </div>
+      <div class="vibe-btns">
+        <button type="button" class="vibe-btn yes" data-id="sfmoma" data-vibe="yes">Yes</button>
+        <button type="button" class="vibe-btn maybe" data-id="sfmoma" data-vibe="maybe">Maybe</button>
+        <button type="button" class="vibe-btn no" data-id="sfmoma" data-vibe="no">Nope</button>
+      </div>
+    </div>
+    <div class="activity">
+      <div class="act-text">
+        <div class="act-name"><a href="https://sjmusart.org/" target="_blank">San Jose Museum of Art</a></div>
+        <div class="act-note">Downtown San Jose · contemporary art</div>
+      </div>
+      <div class="vibe-btns">
+        <button type="button" class="vibe-btn yes" data-id="sjma" data-vibe="yes">Yes</button>
+        <button type="button" class="vibe-btn maybe" data-id="sjma" data-vibe="maybe">Maybe</button>
+        <button type="button" class="vibe-btn no" data-id="sjma" data-vibe="no">Nope</button>
+      </div>
+    </div>
+    <div class="activity">
+      <div class="act-text">
+        <div class="act-name"><a href="https://www.sjquiltmuseum.org/" target="_blank">San Jose Museum of Quilts & Textiles</a></div>
+        <div class="act-note">Downtown San Jose · teens under 18 free</div>
+      </div>
+      <div class="vibe-btns">
+        <button type="button" class="vibe-btn yes" data-id="quilts" data-vibe="yes">Yes</button>
+        <button type="button" class="vibe-btn maybe" data-id="quilts" data-vibe="maybe">Maybe</button>
+        <button type="button" class="vibe-btn no" data-id="quilts" data-vibe="no">Nope</button>
+      </div>
+    </div>
+    <div class="activity">
+      <div class="act-text">
+        <div class="act-name"><a href="https://museum.stanford.edu/" target="_blank">Cantor Arts Center at Stanford</a></div>
+        <div class="act-note">Palo Alto · free · pair with a Stanford campus walk</div>
+      </div>
+      <div class="vibe-btns">
+        <button type="button" class="vibe-btn yes" data-id="cantor" data-vibe="yes">Yes</button>
+        <button type="button" class="vibe-btn maybe" data-id="cantor" data-vibe="maybe">Maybe</button>
+        <button type="button" class="vibe-btn no" data-id="cantor" data-vibe="no">Nope</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="category">
+    <div class="category-label">Nature</div>
+    <div class="activity">
+      <div class="act-text">
+        <div class="act-name"><a href="https://beachboardwalk.com/" target="_blank">Santa Cruz beach & boardwalk day</a></div>
+        <div class="act-note">~1 hr from San Jose · Giant Dipper wooden coaster, beach, arcade</div>
+      </div>
+      <div class="vibe-btns">
+        <button type="button" class="vibe-btn yes" data-id="santa-cruz" data-vibe="yes">Yes</button>
+        <button type="button" class="vibe-btn maybe" data-id="santa-cruz" data-vibe="maybe">Maybe</button>
+        <button type="button" class="vibe-btn no" data-id="santa-cruz" data-vibe="no">Nope</button>
+      </div>
+    </div>
+    <div class="activity">
+      <div class="act-text">
+        <div class="act-name"><a href="https://www.parks.ca.gov/?page_id=27613" target="_blank">Año Nuevo elephant seals</a></div>
+        <div class="act-note">Coast near Santa Cruz · self-guided with free permit · 3–4 mile hike</div>
+      </div>
+      <div class="vibe-btns">
+        <button type="button" class="vibe-btn yes" data-id="elephant-seals" data-vibe="yes">Yes</button>
+        <button type="button" class="vibe-btn maybe" data-id="elephant-seals" data-vibe="maybe">Maybe</button>
+        <button type="button" class="vibe-btn no" data-id="elephant-seals" data-vibe="no">Nope</button>
+      </div>
+    </div>
+    <div class="activity">
+      <div class="act-text">
+        <div class="act-name"><a href="https://www.montereybayaquarium.org/" target="_blank">Monterey Bay Aquarium</a></div>
+        <div class="act-note">~1.5 hrs from San Jose · kelp forest tank, jellyfish, otters</div>
+      </div>
+      <div class="vibe-btns">
+        <button type="button" class="vibe-btn yes" data-id="monterey" data-vibe="yes">Yes</button>
+        <button type="button" class="vibe-btn maybe" data-id="monterey" data-vibe="maybe">Maybe</button>
+        <button type="button" class="vibe-btn no" data-id="monterey" data-vibe="no">Nope</button>
+      </div>
+    </div>
+    <div class="activity">
+      <div class="act-text">
+        <div class="act-name"><a href="https://visit.ucsc.edu/" target="_blank">UC Santa Cruz redwood campus</a></div>
+        <div class="act-note">College tour + nature walk through the redwoods · pair with Santa Cruz beach day</div>
+      </div>
+      <div class="vibe-btns">
+        <button type="button" class="vibe-btn yes" data-id="ucsc-redwoods" data-vibe="yes">Yes</button>
+        <button type="button" class="vibe-btn maybe" data-id="ucsc-redwoods" data-vibe="maybe">Maybe</button>
+        <button type="button" class="vibe-btn no" data-id="ucsc-redwoods" data-vibe="no">Nope</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="category">
+    <div class="category-label">Crafts</div>
+    <div class="activity">
+      <div class="act-text">
+        <div class="act-name"><a href="https://scrap-sf.org/" target="_blank">SCRAP SF creative reuse center</a></div>
+        <div class="act-note">SF Mission District · treasure hunt for art and craft supplies</div>
+      </div>
+      <div class="vibe-btns">
+        <button type="button" class="vibe-btn yes" data-id="scrap" data-vibe="yes">Yes</button>
+        <button type="button" class="vibe-btn maybe" data-id="scrap" data-vibe="maybe">Maybe</button>
+        <button type="button" class="vibe-btn no" data-id="scrap" data-vibe="no">Nope</button>
+      </div>
+    </div>
+    <div class="activity">
+      <div class="act-text">
+        <div class="act-name">Craft project at home with Paige</div>
+        <div class="act-note">Pick a project together from the stash</div>
+      </div>
+      <div class="vibe-btns">
+        <button type="button" class="vibe-btn yes" data-id="craft-home" data-vibe="yes">Yes</button>
+        <button type="button" class="vibe-btn maybe" data-id="craft-home" data-vibe="maybe">Maybe</button>
+        <button type="button" class="vibe-btn no" data-id="craft-home" data-vibe="no">Nope</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="category">
+    <div class="category-label">Music</div>
+    <div class="activity">
+      <div class="act-text">
+        <div class="act-name">Colonel Macabre / Pacing / Void Participant / Buddy Junior<span class="act-tag tag-confirmed">Jul 8</span></div>
+        <div class="act-note">Jade Cathay Chinese Restaurant, San Jose · 7pm · all ages · $10–15, no one turned away<br><br>Your first night. Four local Bay Area indie bands playing a mix of dreamy shoegaze (think hazy, effects-heavy guitars layered over vocals) and folksy indie rock. The venue is a Chinese restaurant — dim sum included — so you eat, hang out, and the bands play around you. It's a small, community DIY show, not a big concert hall. The kind of show where you're 10 feet from the band.</div>
+      </div>
+      <div class="vibe-btns">
+        <button type="button" class="vibe-btn yes" data-id="show-jul8" data-vibe="yes">Yes</button>
+        <button type="button" class="vibe-btn maybe" data-id="show-jul8" data-vibe="maybe">Maybe</button>
+        <button type="button" class="vibe-btn no" data-id="show-jul8" data-vibe="no">Nope</button>
+      </div>
+    </div>
+    <div class="activity">
+      <div class="act-text">
+        <div class="act-name"><a href="https://app.showslinger.com/v4/schlong-party-force-bobby" target="_blank">Schlong / Party Force / Bobby Joe Ebola / Flamango Bay<span class="act-tag tag-confirmed">Jul 10</span></a></div>
+        <div class="act-note">924 Gilman Street, Berkeley · 7pm · all ages · $15<br><br>924 Gilman is a legendary DIY punk venue that Green Day and Rancid came out of in the early 90s. It's volunteer-run, all ages, completely sober (no alcohol, no drugs), and has been going since 1985. The bands on this bill are punk and hardcore — fast, loud, unpolished in the best way. Bobby Joe Ebola has been a Bay Area punk fixture for 30 years. This is a genuine piece of punk history as a venue, not just a show.</div>
+      </div>
+      <div class="vibe-btns">
+        <button type="button" class="vibe-btn yes" data-id="show-jul10" data-vibe="yes">Yes</button>
+        <button type="button" class="vibe-btn maybe" data-id="show-jul10" data-vibe="maybe">Maybe</button>
+        <button type="button" class="vibe-btn no" data-id="show-jul10" data-vibe="no">Nope</button>
+      </div>
+    </div>
+    <div class="activity">
+      <div class="act-text">
+        <div class="act-name">Have a Good Season / Fieldrush / Apperson / Star 99 / Blazer<span class="act-tag tag-confirmed">Jul 12</span></div>
+        <div class="act-note">Black & Brown, San Jose · 7pm doors, 7:30pm music · all ages · $15<br><br>Put on by Heavy Lemon, the crew behind most of San Jose's best DIY shows. Have a Good Season is a touring indie/emo band from New Jersey, Fieldrush is indie rock from San Diego — both on the road specifically for this show. The local San Jose bands open. This is the kind of show that feels like being in on something: small room, people who actually care about the music, bands that are genuinely good but not famous yet.</div>
+      </div>
+      <div class="vibe-btns">
+        <button type="button" class="vibe-btn yes" data-id="show-jul12" data-vibe="yes">Yes</button>
+        <button type="button" class="vibe-btn maybe" data-id="show-jul12" data-vibe="maybe">Maybe</button>
+        <button type="button" class="vibe-btn no" data-id="show-jul12" data-vibe="no">Nope</button>
+      </div>
+    </div>
+    <div class="activity">
+      <div class="act-text">
+        <div class="act-name">KPop karaoke (private room)</div>
+        <div class="act-note">SF or San Jose · strong KPop song libraries</div>
+      </div>
+      <div class="vibe-btns">
+        <button type="button" class="vibe-btn yes" data-id="karaoke" data-vibe="yes">Yes</button>
+        <button type="button" class="vibe-btn maybe" data-id="karaoke" data-vibe="maybe">Maybe</button>
+        <button type="button" class="vibe-btn no" data-id="karaoke" data-vibe="no">Nope</button>
+      </div>
+    </div>
+    <div class="activity">
+      <div class="act-text">
+        <div class="act-name"><a href="https://www.amoeba.com/" target="_blank">Amoeba Music</a></div>
+        <div class="act-note">SF Haight · massive independent record store, great for browsing</div>
+      </div>
+      <div class="vibe-btns">
+        <button type="button" class="vibe-btn yes" data-id="amoeba" data-vibe="yes">Yes</button>
+        <button type="button" class="vibe-btn maybe" data-id="amoeba" data-vibe="maybe">Maybe</button>
+        <button type="button" class="vibe-btn no" data-id="amoeba" data-vibe="no">Nope</button>
+      </div>
+    </div>
+    <div class="activity">
+      <div class="act-text">
+        <div class="act-name">Drum lessons with John</div>
+        <div class="act-note">At home · learn the basics from an actual drummer</div>
+      </div>
+      <div class="vibe-btns">
+        <button type="button" class="vibe-btn yes" data-id="drums" data-vibe="yes">Yes</button>
+        <button type="button" class="vibe-btn maybe" data-id="drums" data-vibe="maybe">Maybe</button>
+        <button type="button" class="vibe-btn no" data-id="drums" data-vibe="no">Nope</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="category">
+    <div class="category-label">Food Adventures</div>
+    <div class="activity">
+      <div class="act-text">
+        <div class="act-name">Dungeness crab</div>
+        <div class="act-note">A Bay Area signature · sweet, meaty, and totally different from anything on the East Coast</div>
+      </div>
+      <div class="vibe-btns">
+        <button type="button" class="vibe-btn yes" data-id="food-crab" data-vibe="yes">Yes</button>
+        <button type="button" class="vibe-btn maybe" data-id="food-crab" data-vibe="maybe">Maybe</button>
+        <button type="button" class="vibe-btn no" data-id="food-crab" data-vibe="no">Nope</button>
+      </div>
+    </div>
+    <div class="activity">
+      <div class="act-text">
+        <div class="act-name">Clam chowder in a sourdough bread bowl</div>
+        <div class="act-note">An SF classic · San Francisco sourdough has a flavor you genuinely can't get anywhere else</div>
+      </div>
+      <div class="vibe-btns">
+        <button type="button" class="vibe-btn yes" data-id="food-chowder" data-vibe="yes">Yes</button>
+        <button type="button" class="vibe-btn maybe" data-id="food-chowder" data-vibe="maybe">Maybe</button>
+        <button type="button" class="vibe-btn no" data-id="food-chowder" data-vibe="no">Nope</button>
+      </div>
+    </div>
+    <div class="activity">
+      <div class="act-text">
+        <div class="act-name">Dim sum</div>
+        <div class="act-note">Small plates, carts, dumplings, and things you point at · already on the menu at the July 8 show</div>
+      </div>
+      <div class="vibe-btns">
+        <button type="button" class="vibe-btn yes" data-id="food-dimsum" data-vibe="yes">Yes</button>
+        <button type="button" class="vibe-btn maybe" data-id="food-dimsum" data-vibe="maybe">Maybe</button>
+        <button type="button" class="vibe-btn no" data-id="food-dimsum" data-vibe="no">Nope</button>
+      </div>
+    </div>
+    <div class="activity">
+      <div class="act-text">
+        <div class="act-name">Korean BBQ</div>
+        <div class="act-note">You grill your own meat at the table · San Jose has excellent spots · very KPop-adjacent</div>
+      </div>
+      <div class="vibe-btns">
+        <button type="button" class="vibe-btn yes" data-id="food-kbbq" data-vibe="yes">Yes</button>
+        <button type="button" class="vibe-btn maybe" data-id="food-kbbq" data-vibe="maybe">Maybe</button>
+        <button type="button" class="vibe-btn no" data-id="food-kbbq" data-vibe="no">Nope</button>
+      </div>
+    </div>
+    <div class="activity">
+      <div class="act-text">
+        <div class="act-name">Mission-style burrito</div>
+        <div class="act-note">SF's own thing · a full meal in foil, bigger than your head, nothing like Chipotle</div>
+      </div>
+      <div class="vibe-btns">
+        <button type="button" class="vibe-btn yes" data-id="food-burrito" data-vibe="yes">Yes</button>
+        <button type="button" class="vibe-btn maybe" data-id="food-burrito" data-vibe="maybe">Maybe</button>
+        <button type="button" class="vibe-btn no" data-id="food-burrito" data-vibe="no">Nope</button>
+      </div>
+    </div>
+    <div class="activity">
+      <div class="act-text">
+        <div class="act-name">Japanese ramen</div>
+        <div class="act-note">The real thing · rich broth, soft egg, noodles made right · very different from the packet</div>
+      </div>
+      <div class="vibe-btns">
+        <button type="button" class="vibe-btn yes" data-id="food-ramen" data-vibe="yes">Yes</button>
+        <button type="button" class="vibe-btn maybe" data-id="food-ramen" data-vibe="maybe">Maybe</button>
+        <button type="button" class="vibe-btn no" data-id="food-ramen" data-vibe="no">Nope</button>
+      </div>
+    </div>
+    <div class="activity">
+      <div class="act-text">
+        <div class="act-name">Vietnamese food</div>
+        <div class="act-note">San Jose has one of the best Vietnamese food scenes in the country · pho, banh mi, bun bo hue</div>
+      </div>
+      <div class="vibe-btns">
+        <button type="button" class="vibe-btn yes" data-id="food-viet" data-vibe="yes">Yes</button>
+        <button type="button" class="vibe-btn maybe" data-id="food-viet" data-vibe="maybe">Maybe</button>
+        <button type="button" class="vibe-btn no" data-id="food-viet" data-vibe="no">Nope</button>
+      </div>
+    </div>
+    <div class="activity">
+      <div class="act-text">
+        <div class="act-name">Indian food</div>
+        <div class="act-note">The South Bay has exceptional Indian restaurants · great if you've never tried it</div>
+      </div>
+      <div class="vibe-btns">
+        <button type="button" class="vibe-btn yes" data-id="food-indian" data-vibe="yes">Yes</button>
+        <button type="button" class="vibe-btn maybe" data-id="food-indian" data-vibe="maybe">Maybe</button>
+        <button type="button" class="vibe-btn no" data-id="food-indian" data-vibe="no">Nope</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="submit-section">
+    <p class="submit-note" id="submit-note">Rate a few activities, then copy your results to send to Paige.</p>
+    <div class="summary-box" id="summary-box"></div>
+    <button type="button" class="copy-btn" id="copy-btn" onclick="copyResults()">Copy my picks</button>
+    <p class="copy-hint" id="copy-hint"></p>
+    <pre id="manual-copy" style="display:none;margin-top:1rem;background:#17132a;border:1px solid #2e2848;border-radius:8px;padding:1rem;font-size:12px;color:#a099b8;white-space:pre-wrap;word-break:break-word;font-family:inherit;"></pre>
+  </div>
+</div>
+
+<script>
+  const vibes = {};
+  const names = {
+    'mind-magic': 'Mind & Magic with Spencer Grey (Winchester)',
+    'ghost-hunt': 'SF Ghost Hunt walking tour',
+    'alcatraz': 'Alcatraz Night Tour',
+    'rosicrucian': 'Rosicrucian Egyptian Museum',
+    'haight': 'Haight-Ashbury',
+    'japantown': 'Japantown SF',
+    'borderlands': 'Borderlands Books',
+    'city-lights': 'City Lights Booksellers',
+    'green-apple': 'Green Apple Books',
+    'hicklebees': "Hicklebee's Books",
+    'recycle-books': 'Recycle Bookstore',
+    'britex': 'Britex Fabrics',
+    'deyoung': 'de Young Museum',
+    'asian-art': 'Asian Art Museum',
+    'sfmoma': 'SFMOMA',
+    'sjma': 'San Jose Museum of Art',
+    'quilts': 'San Jose Museum of Quilts & Textiles',
+    'cantor': 'Cantor Arts Center at Stanford',
+    'santa-cruz': 'Santa Cruz beach & boardwalk day',
+    'elephant-seals': 'Año Nuevo elephant seals',
+    'monterey': 'Monterey Bay Aquarium',
+    'ucsc-redwoods': 'UC Santa Cruz redwood campus',
+    'scrap': 'SCRAP SF creative reuse center',
+    'craft-home': 'Craft project at home with Paige',
+    'show-jul8': 'Show: Colonel Macabre / Pacing (Jul 8, Jade Cathay)',
+    'show-jul10': 'Show: Schlong / Party Force at 924 Gilman (Jul 10)',
+    'show-jul12': 'Show: Have a Good Season / Fieldrush (Jul 12, Black & Brown)',
+    'karaoke': 'KPop karaoke',
+    'amoeba': 'Amoeba Music',
+    'drums': 'Drum lessons with John',
+    'food-crab': 'Dungeness crab',
+    'food-chowder': 'Clam chowder in a sourdough bread bowl',
+    'food-dimsum': 'Dim sum',
+    'food-kbbq': 'Korean BBQ',
+    'food-burrito': 'Mission-style burrito',
+    'food-ramen': 'Japanese ramen',
+    'food-viet': 'Vietnamese food',
+    'food-indian': 'Indian food'
+  };
+
+  document.querySelectorAll('.vibe-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const id = this.dataset.id;
+      const vibe = this.dataset.vibe;
+      vibes[id] = vibe;
+      document.querySelectorAll(`.vibe-btn[data-id="${id}"]`).forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      updateState();
+    });
+  });
+
+  function updateState() {
+    const count = Object.keys(vibes).length;
+    const note = document.getElementById('submit-note');
+    const btn = document.getElementById('copy-btn');
+    const box = document.getElementById('summary-box');
+    if (count === 0) {
+      note.textContent = 'Rate a few activities, then copy your results to send to Paige.';
+      btn.classList.remove('ready');
+      box.classList.remove('visible');
+      return;
+    }
+    note.textContent = `${count} activit${count === 1 ? 'y' : 'ies'} rated — copy and send to Paige when ready!`;
+    btn.classList.add('ready');
+    const yes = [], maybe = [], no = [];
+    for (const [id, vibe] of Object.entries(vibes)) {
+      if (vibe === 'yes') yes.push(names[id]);
+      else if (vibe === 'maybe') maybe.push(names[id]);
+      else no.push(names[id]);
+    }
+    let html = '';
+    if (yes.length) html += `<div class="summary-group"><span class="summary-label label-yes">Yes</span><span class="summary-items">${yes.join(', ')}</span></div>`;
+    if (maybe.length) html += `<div class="summary-group"><span class="summary-label label-maybe">Maybe</span><span class="summary-items">${maybe.join(', ')}</span></div>`;
+    if (no.length) html += `<div class="summary-group"><span class="summary-label label-no">Nope</span><span class="summary-items">${no.join(', ')}</span></div>`;
+    box.innerHTML = html;
+    box.classList.add('visible');
+  }
+
+  function copyResults() {
+    const yes = [], maybe = [], no = [];
+    for (const [id, vibe] of Object.entries(vibes)) {
+      if (vibe === 'yes') yes.push(names[id]);
+      else if (vibe === 'maybe') maybe.push(names[id]);
+      else no.push(names[id]);
+    }
+    const parts = [];
+    if (yes.length) parts.push(`Yes:\n${yes.map(n => `  • ${n}`).join('\n')}`);
+    if (maybe.length) parts.push(`Maybe:\n${maybe.map(n => `  • ${n}`).join('\n')}`);
+    if (no.length) parts.push(`Nope:\n${no.map(n => `  • ${n}`).join('\n')}`);
+    const text = `My picks for the San Jose visit!\n\n${parts.join('\n\n')}`;
+
+    const btn = document.getElementById('copy-btn');
+    const hint = document.getElementById('copy-hint');
+
+    function onSuccess() {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      hint.textContent = 'Now paste it in a text or email to Paige.';
+      setTimeout(() => {
+        btn.textContent = 'Copy my picks';
+        btn.classList.remove('copied');
+      }, 2500);
+    }
+
+    // Try the modern clipboard API first
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(onSuccess).catch(() => fallbackCopy(text, onSuccess));
+    } else {
+      fallbackCopy(text, onSuccess);
+    }
+  }
+
+  function fallbackCopy(text, onSuccess) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;pointer-events:none;';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    try {
+      document.execCommand('copy');
+      onSuccess();
+    } catch (e) {
+      // If everything fails, show the text so they can copy manually
+      const hint = document.getElementById('copy-hint');
+      hint.style.color = '#a099b8';
+      hint.textContent = 'Auto-copy blocked — long-press the text below and copy manually:';
+      const display = document.getElementById('manual-copy');
+      display.textContent = text;
+      display.style.display = 'block';
+    }
+    document.body.removeChild(ta);
+  }
+</script>
+</body>
+</html>
